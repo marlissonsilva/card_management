@@ -46,8 +46,27 @@ model Purchase {
   created_at         DateTime @default(now())
   updated_at         DateTime @updatedAt
 
-  member Member @relation(fields: [member_uuid], references: [uuid], onDelete: Cascade)
+  member      Member        @relation(fields: [member_uuid], references: [uuid], onDelete: Cascade)
+  installment Installment[]
 
   @@index([member_uuid], map: "idx_purchases_member")
   @@map("purchase")
+}
+
+model Installment {
+  uuid               String   @id @default(cuid())
+  purchase_uuid      String
+  installment_number Int
+  value              Int
+  due_date           DateTime @db.Date
+  is_paid            Boolean  @default(false)
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
+
+  purchase Purchase @relation(fields: [purchase_uuid], references: [uuid], onDelete: Cascade)
+
+  @@unique([purchase_uuid, installment_number], map: "unique_installment_number")
+  @@index([purchase_uuid], map: "idx_installments_purchase")
+  @@index([due_date], map: "idx_installments_due_date")
+  @@map("installment")
 }
