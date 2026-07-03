@@ -6,6 +6,16 @@ const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
   globalIgnores([".next/**", "out/**", "build/**", "next-env.d.ts"]),
+  {
+    ignores: ["eslint.config.mjs"],
+  },
+  {
+    settings: {
+      react: {
+        version: "19.2.7"
+      }
+    }
+  }
 ]);
 
 export default eslintConfig;

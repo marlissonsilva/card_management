@@ -37,7 +37,7 @@ jobs:
         run: bunx prisma db push
 
       - name: Run linter
-        run: bun run linter
+        run: bun run lint
 
       - name: Build
         run: bun run build
