@@ -11,6 +11,9 @@ jobs:
     name: Lint, Build and Validation Prisma
     runs-on: ubuntu-latest
 
+    env:
+      DATABASE_URL: "postgres://docker:docker@localhost:5433/card_db?schema=public"
+
     steps:
       - name: Code checkout
         uses: actions/checkout@v4
@@ -32,13 +35,9 @@ jobs:
 
       - name: Sync Database temp
         run: bunx prisma db push
-        env:
-          DATABASE_URL: "postgres://docker:docker@localhost:5433/card_db?schema=public"
 
       - name: Run linter
         run: bun run linter
 
       - name: Build
         run: bun run build
-        env:
-          DATABASE_URL: "postgres://docker:docker@localhost:5433/card_db?schema=public"
