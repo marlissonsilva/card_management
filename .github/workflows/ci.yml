@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Database (docker compose)
-        run: docker-compose up -d
+        run: docker compose up -d
 
       - name: Waith Database
         run: sleep 5
