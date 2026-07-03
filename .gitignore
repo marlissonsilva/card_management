@@ -1,0 +1,27 @@
+src/generated
+
+*.env
+/.next/
+/node_modules
+/build/
+
+# testing
+/coverage/
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
