@@ -27,9 +27,27 @@ model Member {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  user User @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
+  user      User       @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
+  purchases Purchase[]
 
   @@unique([user_uuid, uuid], map: "unique_member_per_user")
   @@index([user_uuid], map: "idx_members_user")
   @@map("member")
+}
+
+model Purchase {
+  uuid               String   @id @default(cuid())
+  description        String?
+  amount             Int
+  status             String   @default("OPEN")
+  date_purchase      DateTime
+  installments_count Int      @default(1)
+  member_uuid        String
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
+
+  member Member @relation(fields: [member_uuid], references: [uuid], onDelete: Cascade)
+
+  @@index([member_uuid], map: "idx_purchases_member")
+  @@map("purchase")
 }
