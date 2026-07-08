@@ -7,7 +7,7 @@ describe('CreateUser', () => {
     const data = {
       username: 'fulano',
       email: 'test@gmail.com',
-      password: 'password',
+      password: 'passworD37#',
       invoice_closing: 15,
     }
 
@@ -20,7 +20,7 @@ describe('CreateUser', () => {
     const data = {
       username: '',
       email: '',
-      password: '',
+      password: 'passWord&9',
       invoice_closing: 20
     }
 
