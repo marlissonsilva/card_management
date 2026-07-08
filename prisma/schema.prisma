@@ -10,7 +10,8 @@ datasource db {
 model User {
   uuid            String   @id @default(cuid())
   email           String   @unique
-  name            String?
+  username        String
+  password        String
   invoice_closing Int
   created_at      DateTime @default(now())
   updated_at      DateTime @updatedAt

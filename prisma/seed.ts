@@ -1,22 +1,25 @@
 import prisma from "../src/lib/prisma";
+import bcrypt from "bcryptjs";
 
 async function main() {
   const users = await Promise.all([
     prisma.user.upsert({
       where: { email: "alice@prisma.io" },
-      update: { name: "Alice" },
+      update: { username: "Alice" },
       create: {
         email: "alice@prisma.io",
-        name: "Alice",
+        username: "Alice",
+        password: bcrypt.hashSync("Password78&"),
         invoice_closing: 15,
       },
     }),
     prisma.user.upsert({
       where: { email: "bob@prisma.io" },
-      update: { name: "Bob" },
+      update: { username: "Bob" },
       create: {
         email: "bob@prisma.io",
-        name: "Bob",
+        username: "Bob",
+        password: bcrypt.hashSync("erdgsd%6RFD"),
         invoice_closing: 20
       },
     }),
