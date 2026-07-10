@@ -2,14 +2,10 @@
 
 import prisma from "@/src/lib/prisma";
 import bcrypt from "bcryptjs";
-import { z } from "zod";
 import jwt from "jsonwebtoken"
 import { cookies } from "next/headers";
+import { authenticateSchema } from "./validate/zod";
 
-const authenticateForm = z.object({
-  email: z.email({ message: "Insira um email válido" }),
-  password: z.string({ message: "A senha é obrigatória" })
-})
 
 export interface AuthenticateProps {
   email: string,
@@ -18,7 +14,7 @@ export interface AuthenticateProps {
 
 export async function authenticate(formaData: AuthenticateProps): Promise<{ success: boolean, message?: string }> {
 
-  const validateFields = authenticateForm.safeParse(formaData);
+  const validateFields = authenticateSchema.safeParse(formaData);
   if (!validateFields.success) {
     return { success: false, message: "Dados de login inválidos" }
   }

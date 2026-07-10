@@ -3,6 +3,7 @@
 import bcrypt from "bcryptjs";
 import { passwordValidate } from "../utils/password-validate";
 import prisma from "@/src/lib/prisma";
+import { userSchema } from "./validate/zod";
 
 interface CreateUserProps {
   username: string
@@ -11,11 +12,13 @@ interface CreateUserProps {
   invoice_closing: number
 }
 
-export async function CreateUser({ username, email, password, invoice_closing }: CreateUserProps): Promise<{ message: string }> {
-  if (!username || !email || !password || !invoice_closing) {
+export async function CreateUser(formData: CreateUserProps): Promise<{ message: string }> {
+  const validateUser = userSchema.safeParse(formData)
+  if (!validateUser.success) {
     return { message: "Erro ao criar usuário" }
   }
 
+  const { username, email, password, invoice_closing } = validateUser.data
   const isMatchPassword = passwordValidate(password)
   if (!isMatchPassword) {
     return { message: "A senha não atende ao critérios." }
