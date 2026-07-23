@@ -5,7 +5,7 @@ import Link from "next/link"
 export default function Home() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center px-6 py-12 bg-background">
-      <div className='absolute top-8 flex w-full justify-start md:max-w-6xl items-center gap-2'>
+      <div className='absolute top-8 px-6 xl:px-0 flex w-full justify-start md:max-w-6xl items-center gap-2'>
         <CreditCard />
         <span className='text-xl'>Card Management</span>
       </div>

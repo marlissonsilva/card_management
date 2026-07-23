@@ -2,7 +2,7 @@
  * @jest-environment node
  */
 import '@testing-library/jest-dom'
-import { CreateUser } from './create'
+import { createUser } from './create'
 import prisma from '@/src/lib/prisma'
 import bcrypt from 'bcryptjs'
 
@@ -32,7 +32,7 @@ describe('CreateUser', () => {
       invoice_closing: data.invoice_closing
     })
 
-    const result = await CreateUser(data)
+    const result = await createUser(data)
 
     expect(result).toEqual({ message: "Usuário criado com sucesso" })
 
@@ -47,7 +47,7 @@ describe('CreateUser', () => {
       invoice_closing: 20
     }
 
-    const result = await CreateUser(data)
+    const result = await createUser(data)
 
     expect(result).toEqual({ message: 'Erro ao criar usuário' })
   })

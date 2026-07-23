@@ -10,5 +10,28 @@
 
 body {
   margin: 0;
-  @apply bg-zinc-950 text-zinc-100;
+  /*@apply bg-zinc-950 text-zinc-100;*/
+  @apply bg-white;
+}
+
+label {
+  display: block;
+  width: 100%;
+}
+
+input {
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 10px;
+  display: block;
+  width: 100%;
+}
+
+.error {
+  background: red;
+  font-size: 12px;
+}
+
+button {
+  cursor: pointer;
 }

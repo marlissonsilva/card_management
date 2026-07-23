@@ -4,24 +4,18 @@ import bcrypt from "bcryptjs";
 import { passwordValidate } from "../utils/password-validate";
 import prisma from "@/src/lib/prisma";
 import { userSchema } from "./validate/zod";
+import { CreateUserProps } from "./types";
 
-interface CreateUserProps {
-  username: string
-  email: string
-  password: string
-  invoice_closing: number
-}
-
-export async function CreateUser(formData: CreateUserProps): Promise<{ message: string }> {
+export async function createUser(formData: CreateUserProps): Promise<{ success: boolean, message: string }> {
   const validateUser = userSchema.safeParse(formData)
   if (!validateUser.success) {
-    return { message: "Erro ao criar usuário" }
+    return { success: false, message: "Erro ao criar usuário" }
   }
 
   const { username, email, password, invoice_closing } = validateUser.data
   const isMatchPassword = passwordValidate(password)
   if (!isMatchPassword) {
-    return { message: "A senha não atende ao critérios." }
+    return { success: false, message: "A senha não atende ao critérios." }
   }
 
   try {
@@ -34,11 +28,9 @@ export async function CreateUser(formData: CreateUserProps): Promise<{ message: 
       invoice_closing
     }
 
-    const result = await prisma.user.create({ data })
-    console.log("result", result)
-    return { message: "Usuário criado com sucesso" }
+    await prisma.user.create({ data })
+    return { success: true, message: "Usuário criado com sucesso" }
   } catch (error) {
-    console.log(error)
-    return { message: "Erro ao criar usuário" }
+    return { success: false, message: "Erro ao criar usuário" }
   }
 }
