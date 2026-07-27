@@ -34,7 +34,7 @@ describe('CreateUser', () => {
 
     const result = await createUser(data)
 
-    expect(result).toEqual({ message: "Usuário criado com sucesso" })
+    expect(result).toEqual({ success: true, message: "Usuário criado com sucesso" })
 
     expect(prisma.user.create).toHaveBeenCalled()
   })
@@ -49,6 +49,6 @@ describe('CreateUser', () => {
 
     const result = await createUser(data)
 
-    expect(result).toEqual({ message: 'Erro ao criar usuário' })
+    expect(result).toEqual({ success: false, message: 'Erro ao criar usuário' })
   })
 })
