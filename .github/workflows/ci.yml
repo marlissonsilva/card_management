@@ -8,7 +8,7 @@ on:
 
 jobs:
   validation:
-    name: Lint, Build and Validation Prisma
+    name: Test, Lint, Build and Validation Prisma
     runs-on: ubuntu-latest
 
     env:
