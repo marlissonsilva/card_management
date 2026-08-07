@@ -31,7 +31,7 @@ model Member {
   user      User       @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
   purchases Purchase[]
 
-  @@unique([user_uuid, uuid], map: "unique_member_per_user")
+  @@unique([user_uuid, name], map: "unique_member_per_user")
   @@index([user_uuid], map: "idx_members_user")
   @@map("member")
 }
