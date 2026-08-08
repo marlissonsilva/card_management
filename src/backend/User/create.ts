@@ -4,7 +4,14 @@ import bcrypt from "bcryptjs";
 import { passwordValidate } from "../utils/password-validate";
 import prisma from "@/src/lib/prisma";
 import { userSchema } from "./validate/zod";
-import { CreateUserProps } from "./types";
+
+export interface CreateUserProps {
+  username: string
+  email: string
+  password: string
+  invoice_closing: number
+}
+
 
 export async function createUser(
   formData: CreateUserProps,
