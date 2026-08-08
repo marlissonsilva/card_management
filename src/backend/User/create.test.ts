@@ -10,7 +10,8 @@ jest.mock('../../lib/prisma.ts', () => ({
   __esModule: true,
   default: {
     user: {
-      create: jest.fn()
+      create: jest.fn(),
+      findUnique: jest.fn()
     }
   }
 }))
