@@ -13,19 +13,6 @@ body {
   background-color: white;
 }
 
-label {
-  display: block;
-  width: 100%;
-}
-
-input {
-  border: 1px solid black;
-  border-radius: 5px;
-  padding: 10px;
-  display: block;
-  width: 100%;
-}
-
 .error {
   background: red;
   font-size: 12px;
@@ -33,4 +20,41 @@ input {
 
 button {
   cursor: pointer;
+}
+
+label {
+  display: block;
+  width: 100%;
+}
+
+input,
+select {
+  width: 100%; 
+  box-sizing: border-box; 
+  border-radius: 4px; 
+  background-color: #fff;
+  color: #333;
+  border: 1px solid black;
+  padding: 10px;
+  height: 46px;
+}
+
+
+select {
+  appearance: none; 
+  -webkit-appearance: none; 
+  -moz-appearance: none; 
+  background-repeat: no-repeat;
+  background-position: right 12px center; 
+  background-size: 16px;
+  padding-right: 40px;
+  min-width: 200px; 
+}
+
+
+input:focus,
+select:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
