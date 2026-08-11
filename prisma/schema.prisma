@@ -16,7 +16,8 @@ model User {
   created_at      DateTime @default(now())
   updated_at      DateTime @updatedAt
 
-  members Member[]
+  members   Member[]
+  purchases Purchase[]
 
   @@map("user")
 }
@@ -43,11 +44,13 @@ model Purchase {
   status             String   @default("OPEN")
   date_purchase      DateTime
   installments_count Int      @default(1)
+  user_uuid          String
   member_uuid        String
   created_at         DateTime @default(now())
   updated_at         DateTime @updatedAt
 
   member      Member        @relation(fields: [member_uuid], references: [uuid], onDelete: Cascade)
+  user        User          @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
   installment Installment[]
 
   @@index([member_uuid], map: "idx_purchases_member")
