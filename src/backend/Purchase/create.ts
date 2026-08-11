@@ -6,6 +6,7 @@ export interface CreatePurchaseProps {
   amount: number;
   description: string;
   member: string;
+  user_uuid?: string;
   date_purchase: Date;
   installments_count: number;
 }
@@ -16,7 +17,7 @@ export async function createPurchase(
   try {
     const session = await getSession();
     const secret = process.env.JWT_SECRET;
-   
+
     if (!session) {
       throw new Error("Erro na sessão!");
     }
@@ -25,9 +26,11 @@ export async function createPurchase(
       throw new Error("Erro na secret");
     }
 
-    // TODO: Criar funções do Member (create, update, findFirst, findUnique, delete)
     let member = await prisma.member.findFirst({
-      where: { name: formData.member },
+      where: {
+        user_uuid: session.uuid,
+        name: formData.member,
+      },
     });
     if (!member) {
       member = await prisma.member.create({
@@ -45,6 +48,11 @@ export async function createPurchase(
       installments_count: formData.installments_count,
       member: {
         connect: { uuid: member.uuid },
+      },
+      user: {
+        connect: {
+          uuid: session?.uuid,
+        },
       },
     };
 
