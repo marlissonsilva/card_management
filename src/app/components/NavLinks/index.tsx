@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { links } from "@/src/app/data/navLinks";
 
 export default function NavLinks() {
@@ -24,11 +24,11 @@ export default function NavLinks() {
           <Link
             key={link.name}
             href={finalHref}
-            className={`flex w-full grow items-center 
+            className={`flex w-full grow items-center border border-gray-200
               gap-2 rounded-md p-3 text-md font-medium 
-              hover:bg-sky-100 hover:text-violet-600 md:flex-none 
+              hover:text-violet-600 md:flex-none 
               justify-start md:p-2 md:px-3 cursor-pointer
-            ${pathname === link.href ? "text-violet-600" : ""}
+            ${pathname === link.href ? "text-violet-600 bg-sky-100" : ""}
             `}
           >
             <LinkIcon className="w-6" />

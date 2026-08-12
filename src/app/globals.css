@@ -29,28 +29,31 @@ label {
 
 input,
 select {
-  width: 100%; 
-  box-sizing: border-box; 
-  border-radius: 4px; 
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 4px;
   background-color: #fff;
   color: #333;
   border: 1px solid black;
   padding: 10px;
-  height: 46px;
+  height: 42px;
 }
-
 
 select {
-  appearance: none; 
-  -webkit-appearance: none; 
-  -moz-appearance: none; 
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
   background-repeat: no-repeat;
-  background-position: right 12px center; 
+  background-position: right 12px center;
   background-size: 16px;
   padding-right: 40px;
-  min-width: 200px; 
+  min-width: 200px;
+  cursor: pointer;
 }
 
+select option {
+  cursor: pointer;
+}
 
 input:focus,
 select:focus {

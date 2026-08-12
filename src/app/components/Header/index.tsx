@@ -12,9 +12,15 @@ export function Header({ className }: HeaderProps) {
   const isOpen = useModalStore((state) => state.isOpen)
   return (
     <>
-      <div className={`w-full border border-gray-200 flex items-center justify-between px-4 py-5  ${className}`}>
-        <div>Mês da fatura</div>
-        <button className="flex items-center px-4 py-2 border border-gray-300 rounded-md"
+      <div className={`w-full border border-gray-200 flex items-center justify-between px-6 py-5  ${className}`}>
+        <select id="month" className="max-w-fit capitalize">
+          {Array.from({ length: 12 }, (_, i) => (
+            <option key={i} value={i.toString()} className="cursor-pointer">
+              {new Date(0, i).toLocaleString("pt-BR", { month: "long" })}
+            </option>
+          ))}
+        </select>
+        <button className="flex items-center px-4 py-2 border rounded-md"
           onClick={openModal}>
           <Plus />
           <span>Nova compra</span>

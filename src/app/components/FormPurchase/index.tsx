@@ -7,9 +7,11 @@ import { useForm } from "react-hook-form"
 import { XIcon } from "lucide-react"
 import { useModalStore } from "../../store/useModalStore"
 import { useState } from "react"
+import { useCreatePurchaseStore } from "../../store/useCreatePurchase"
 
 export function FormPurchase() {
   const closeModal = useModalStore((state) => state.closeModal)
+  const setCreated = useCreatePurchaseStore((state) => state.setCreated)
   const [amount, setAmount] = useState("")
 
   const { register, handleSubmit, setValue, formState: { errors } } = useForm<PurchaseFormData>({
@@ -35,6 +37,7 @@ export function FormPurchase() {
       })
       if (response.success) {
         closeModal()
+        setCreated()
       }
     } catch (error) {
       console.log(error)
@@ -105,8 +108,8 @@ export function FormPurchase() {
         </div>
 
         <div className={styles.input_group}>
-          <label>Data da compra
-            <input type="date" {...register("date_purchase")} />
+          <label htmlFor="date_purchase">Data da compra
+            <input type="date" {...register("date_purchase")} id="date_purchase" />
           </label>
           {errors.date_purchase?.message && (
             <span className={styles.error_message}>{errors.date_purchase.message}</span>
