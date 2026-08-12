@@ -39,7 +39,7 @@ model Member {
 
 model Purchase {
   uuid               String   @id @default(cuid())
-  description        String?
+  description        String
   amount             Int
   status             String   @default("OPEN")
   date_purchase      DateTime
