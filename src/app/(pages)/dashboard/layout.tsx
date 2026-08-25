@@ -11,7 +11,7 @@ export default async function Layout({
             <Sidebar />
             <div className="w-full">
                 <Header />
-                <main className="h-[calc(100%-84px)] p-6">
+                <main className="h-[calc(100%-84px)] p-6 overflow-auto">
                     {children}
                 </main>
             </div>

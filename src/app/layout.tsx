@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { Montserrat } from 'next/font/google'
+import { Montserrat } from "next/font/google";
 import "./globals.css";
 
 const montserrat = Montserrat({
-  subsets: ['latin']
-})
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: "Card Management",
