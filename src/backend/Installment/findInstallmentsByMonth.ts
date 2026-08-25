@@ -3,18 +3,13 @@
 import prisma from "@/src/lib/prisma";
 import { getSession } from "../User/session";
 import { getMonthDate } from "../utils/date";
+import { getUser } from "../User/getUser";
 
-export async function findInstallmentsByMonth(
-  month: number,
-) {
+export async function findInstallmentsByMonth(month: number) {
   const userUuid = await getSession();
   if (!userUuid?.uuid) return { success: false, data: [], totalAmount: 0 };
 
-  const user = await prisma.user.findUnique({
-    where: {
-      uuid: userUuid?.uuid,
-    },
-  });
+  const user = await getUser(userUuid.uuid);
 
   if (!user) {
     throw new Error("Erro ao buscar usuário");
