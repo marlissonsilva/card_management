@@ -1,30 +1,38 @@
-"use client"
-import { zodResolver } from "@hookform/resolvers/zod"
-import styles from './FormPurchase.module.css'
-import { PurchaseFormData, purchaseSchema } from '@/src/backend/Purchase/validate/zod'
-import { createPurchase } from '@/src/backend/Purchase/create'
-import { useForm } from "react-hook-form"
-import { XIcon } from "lucide-react"
-import { useModalStore } from "../../store/useModalStore"
-import { useState } from "react"
-import { useCreatePurchaseStore } from "../../store/useCreatePurchase"
+"use client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import styles from "./FormPurchase.module.css";
+import {
+  PurchaseFormData,
+  purchaseSchema,
+} from "@/src/backend/Purchase/validate/zod";
+import { createPurchase } from "@/src/backend/Purchase/create";
+import { useForm } from "react-hook-form";
+import { XIcon } from "lucide-react";
+import { useModalStore } from "../../store/useModal";
+import { useState } from "react";
+import { useCreatePurchaseStore } from "../../store/useCreatePurchase";
 
 export function FormPurchase() {
-  const closeModal = useModalStore((state) => state.closeModal)
-  const setCreated = useCreatePurchaseStore((state) => state.setCreated)
-  const [amount, setAmount] = useState("")
+  const closeModal = useModalStore((state) => state.closeModal);
+  const setCreated = useCreatePurchaseStore((state) => state.setCreated);
+  const [amount, setAmount] = useState("");
 
-  const { register, handleSubmit, setValue, formState: { errors } } = useForm<PurchaseFormData>({
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<PurchaseFormData>({
     resolver: zodResolver(purchaseSchema),
     defaultValues: {
       amount: undefined,
-      date_purchase: "",
+      date_purchase: undefined,
       description: "",
       installments_count: 1,
       member: "",
-      status: "OPEN"
-    }
-  })
+      status: "OPEN",
+    },
+  });
 
   const onSubmit = async (formData: PurchaseFormData) => {
     try {
@@ -34,15 +42,15 @@ export function FormPurchase() {
         member: formData.member,
         date_purchase: new Date(formData.date_purchase),
         installments_count: formData.installments_count,
-      })
+      });
       if (response.success) {
-        closeModal()
-        setCreated()
+        closeModal();
+        setCreated();
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value.replace(/\D/g, "");
@@ -57,7 +65,12 @@ export function FormPurchase() {
       currency: "BRL",
     }).format(Number(numberValue));
     setAmount(formatted);
-    setValue("amount", Number(value))
+    setValue("amount", Number(value));
+  };
+
+  const handleDatePurchase = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const dateString = event.target.value;
+    setValue("date_purchase", new Date(dateString));
   };
 
   return (
@@ -65,17 +78,24 @@ export function FormPurchase() {
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
         <div className="flex justify-between">
           <h3 className={styles.title}>Registrar Compra</h3>
-          <button className={styles.iconClose} type="button" onClick={closeModal}>
+          <button
+            className={styles.iconClose}
+            type="button"
+            onClick={closeModal}
+          >
             <XIcon />
           </button>
         </div>
 
         <div className={styles.input_group}>
-          <label>Descrição
+          <label>
+            Descrição
             <input type="text" {...register("description")} />
           </label>
           {errors.description?.message && (
-            <span className={styles.error_message}>{errors.description.message}</span>
+            <span className={styles.error_message}>
+              {errors.description.message}
+            </span>
           )}
         </div>
 
@@ -90,47 +110,69 @@ export function FormPurchase() {
               />
             </label>
             {errors.amount?.message && (
-              <span className={styles.error_message}>{errors.amount.message}</span>
+              <span className={styles.error_message}>
+                {errors.amount.message}
+              </span>
             )}
           </div>
           <div className={styles.input_group}>
-            <label>Parcelas
-              <select name="installments_count" id="installments_count"
-                onChange={(event) => setValue("installments_count", Number(event.target.value))}
-                defaultValue={1}>
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(opt => <option key={opt} value={opt}>{opt}</option>)}
+            <label>
+              Parcelas
+              <select
+                name="installments_count"
+                id="installments_count"
+                onChange={(event) =>
+                  setValue("installments_count", Number(event.target.value))
+                }
+                defaultValue={1}
+              >
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((opt) => (
+                  <option key={opt} value={opt}>
+                    {opt}
+                  </option>
+                ))}
               </select>
             </label>
             {errors.installments_count?.message && (
-              <span className={styles.error_message}>{errors.installments_count.message}</span>
+              <span className={styles.error_message}>
+                {errors.installments_count.message}
+              </span>
             )}
           </div>
         </div>
 
         <div className={styles.input_group}>
-          <label htmlFor="date_purchase">Data da compra
-            <input type="date" {...register("date_purchase")} id="date_purchase" />
+          <label htmlFor="date_purchase">
+            Data da compra
+            <input
+              type="date"
+              id="date_purchase"
+              onChange={handleDatePurchase}
+            />
           </label>
           {errors.date_purchase?.message && (
-            <span className={styles.error_message}>{errors.date_purchase.message}</span>
+            <span className={styles.error_message}>
+              {errors.date_purchase.message}
+            </span>
           )}
         </div>
 
         <div className={styles.input_group}>
-          <label>Responsavél pela compra
-            <input type="text" {...register('member')} />
+          <label>
+            Responsavél pela compra
+            <input type="text" {...register("member")} />
           </label>
           {errors.member?.message && (
-            <span className={styles.error_message}>{errors.member.message}</span>
+            <span className={styles.error_message}>
+              {errors.member.message}
+            </span>
           )}
         </div>
 
-        <button type='submit' className={styles.submit_button}>
+        <button type="submit" className={styles.submit_button}>
           Salvar Registro
         </button>
-
       </form>
     </section>
-
-  )
+  );
 }

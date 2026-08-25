@@ -1,6 +1,4 @@
-import { Member } from "@/src/generated/prisma/client";
 import { currencyFormat } from "../../utils/currencyFormat";
-import { dateFormat } from "../../utils/dateFormat";
 import styles from "./Card.module.css";
 
 interface CardMemberProps {
@@ -8,9 +6,6 @@ interface CardMemberProps {
     totalAmountPurchases: number;
     name: string;
     uuid: string;
-    user_uuid: string;
-    created_at: Date;
-    updated_at: Date;
   };
 }
 
