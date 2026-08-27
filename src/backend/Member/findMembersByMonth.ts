@@ -72,6 +72,7 @@ export async function findMembersByMonth(month: number) {
       return {
         ...memberData,
         totalAmountPurchases,
+        invloceClosing: user.invoice_closing,
       };
     });
   } catch (error) {
