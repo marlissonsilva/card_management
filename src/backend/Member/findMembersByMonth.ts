@@ -4,6 +4,7 @@ import prisma from "@/src/lib/prisma";
 import { getSession } from "../User/session";
 import { getMonthDate } from "../utils/date";
 import { getUser } from "../User/getUser";
+import { revalidatePath } from "next/cache";
 
 export async function findMembersByMonth(month: number) {
   const userUuid = await getSession();
@@ -69,6 +70,7 @@ export async function findMembersByMonth(month: number) {
       }, 0);
 
       const { ...memberData } = member;
+      revalidatePath("/dashboard/membros");
       return {
         ...memberData,
         totalAmountPurchases,

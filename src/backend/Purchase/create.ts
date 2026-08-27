@@ -2,6 +2,7 @@
 import prisma from "@/src/lib/prisma";
 import { getSession } from "../User/session";
 import { purchaseSchema } from "./validate/zod";
+import { revalidatePath } from "next/cache";
 
 export interface CreatePurchaseProps {
   amount: number;
@@ -106,6 +107,7 @@ export async function createPurchase(
       };
     }
 
+    revalidatePath("/dashboard/compras");
     return { success: false, message: "Erro ao registrar compra" };
   } catch (error) {
     console.error(error);

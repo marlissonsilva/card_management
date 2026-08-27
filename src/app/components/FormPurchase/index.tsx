@@ -48,6 +48,7 @@ export function FormPurchase() {
       if (response.success) {
         closeModal();
         setCreated();
+        route.refresh();
         route.push("/dashboard/compras");
       }
     } catch (error) {
