@@ -6,9 +6,10 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && prisma migrate deploy && next build",
     "start": "next start",
     "lint": "eslint",
+    "postinstall": "prisma generate",
     "db:generate": "bun --env-file=.env ./node_modules/.bin/prisma generate",
     "db:push": "bun --env-file=.env ./node_modules/.bin/prisma db push",
     "db:migrate": "bun --env-file=.env ./node_modules/.bin/prisma migrate dev",
