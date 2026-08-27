@@ -42,7 +42,7 @@ export function FormPurchase() {
         amount: formData.amount,
         description: formData.description,
         member: formData.member,
-        date_purchase: new Date(formData.date_purchase),
+        date_purchase: formData.date_purchase,
         installments_count: formData.installments_count,
       });
       if (response.success) {
@@ -73,7 +73,8 @@ export function FormPurchase() {
 
   const handleDatePurchase = (event: React.ChangeEvent<HTMLInputElement>) => {
     const dateString = event.target.value;
-    setValue("date_purchase", new Date(dateString));
+    const date = new Date(new Date(dateString).setHours(24, 0, 0, 0));
+    setValue("date_purchase", date);
   };
 
   return (
