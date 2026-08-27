@@ -4,6 +4,7 @@
   border: 1px solid gray;
   padding: 10px 20px;
   border-radius: 8px;
+  align-items: center;
 
   .title {
     font-size: 1rem;

@@ -3,6 +3,8 @@ import { Plus } from "lucide-react";
 import { FormPurchase } from "../FormPurchase";
 import { useModalStore } from "../../store/useModal";
 import { useMonthStore } from "../../store/useMonth";
+import { currencyFormat } from "../../utils/currencyFormat";
+import { useInstallments } from "../../hooks/useInstallments";
 export interface HeaderProps {
   className?: string;
 }
@@ -12,6 +14,7 @@ export function Header({ className }: HeaderProps) {
   const isOpen = useModalStore((state) => state.isOpen);
   const setMonth = useMonthStore((state) => state.setMonth);
   const month = useMonthStore((state) => state.month);
+  const installments = useInstallments();
 
   return (
     <>
@@ -30,14 +33,27 @@ export function Header({ className }: HeaderProps) {
             </option>
           ))}
         </select>
-        <button
-          className="flex items-center px-4 py-2 border rounded-md"
-          onClick={openModal}
-        >
-          <Plus />
-          <span>Nova compra</span>
-        </button>
+
+        <div className="flex items-center gap-4">
+          <div>
+            <p>
+              Fatura atual:
+              <span className="font-semibold text-xl p-1">
+                {" "}
+                {currencyFormat(installments.totalAmount)}
+              </span>
+            </p>
+          </div>
+          <button
+            className="flex items-center px-4 py-2 border rounded-md"
+            onClick={openModal}
+          >
+            <Plus />
+            <span>Nova compra</span>
+          </button>
+        </div>
       </div>
+
       {isOpen && <FormPurchase />}
     </>
   );

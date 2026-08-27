@@ -11,11 +11,13 @@ import { XIcon } from "lucide-react";
 import { useModalStore } from "../../store/useModal";
 import { useState } from "react";
 import { useCreatePurchaseStore } from "../../store/useCreatePurchase";
+import { useRouter } from "next/navigation";
 
 export function FormPurchase() {
   const closeModal = useModalStore((state) => state.closeModal);
   const setCreated = useCreatePurchaseStore((state) => state.setCreated);
   const [amount, setAmount] = useState("");
+  const route = useRouter();
 
   const {
     register,
@@ -46,6 +48,7 @@ export function FormPurchase() {
       if (response.success) {
         closeModal();
         setCreated();
+        route.push("/dashboard/compras");
       }
     } catch (error) {
       console.log(error);
