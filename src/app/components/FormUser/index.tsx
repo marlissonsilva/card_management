@@ -133,7 +133,11 @@ export function FormUser() {
           </div>
         )}
 
-        <button type="submit" className={styles.submit_button}>
+        <button
+          type="submit"
+          className={styles.submit_button}
+          disabled={loading}
+        >
           {action === "account" ? "Criar conta" : "Fazer login"}
         </button>
       </form>

@@ -7,7 +7,7 @@ import {
 } from "@/src/backend/Purchase/validate/zod";
 import { createPurchase } from "@/src/backend/Purchase/create";
 import { useForm } from "react-hook-form";
-import { XIcon } from "lucide-react";
+import { Loader, XIcon } from "lucide-react";
 import { useModalStore } from "../../store/useModal";
 import { useState } from "react";
 import { useCreatePurchaseStore } from "../../store/useCreatePurchase";
@@ -17,6 +17,7 @@ export function FormPurchase() {
   const closeModal = useModalStore((state) => state.closeModal);
   const setCreated = useCreatePurchaseStore((state) => state.setCreated);
   const [amount, setAmount] = useState("");
+  const [loading, setLoading] = useState(false);
   const route = useRouter();
 
   const {
@@ -37,6 +38,7 @@ export function FormPurchase() {
   });
 
   const onSubmit = async (formData: PurchaseFormData) => {
+    setLoading(true);
     try {
       const response = await createPurchase({
         amount: formData.amount,
@@ -50,6 +52,7 @@ export function FormPurchase() {
         setCreated();
         route.refresh();
         route.push("/dashboard/compras");
+        setLoading(false);
       }
     } catch (error) {
       console.log(error);
@@ -174,7 +177,12 @@ export function FormPurchase() {
           )}
         </div>
 
-        <button type="submit" className={styles.submit_button}>
+        <button
+          type="submit"
+          className={styles.submit_button}
+          disabled={loading}
+        >
+          {loading && <Loader className="animate-spin" />}
           Salvar Registro
         </button>
       </form>
