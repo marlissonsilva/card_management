@@ -36,7 +36,7 @@
   /* #f25f4c - Destructive */
   --destructive: oklch(0.638 0.175 29.5);
 
-  /* Bordas e Inputs (utilizando #a7a9be em modo light) */
+  /* Bordas e Inputs corrigidos para usar o tom cinza neutro #a7a9be */
   --border: oklch(0.718 0.027 288.5);
   --input: oklch(0.718 0.027 288.5);
   --ring: oklch(0.697 0.175 52.8);
@@ -135,9 +135,9 @@
   /* #f25f4c */
   --destructive: oklch(0.638 0.175 29.5);
 
-  /* #2e2f3e para bordas no dark mode */
-  --border: oklch(0.315 0.028 288.7);
-  --input: oklch(0.315 0.028 288.7);
+  /* Bordas levemente mais claras que o fundo #2e2f3e para criar contraste visual */
+  --border: oklch(0.45 0.02 288.7);
+  --input: oklch(0.45 0.02 288.7);
   --ring: oklch(0.697 0.175 52.8);
 
   /* Gráficos mantendo a paleta */
@@ -154,7 +154,7 @@
   --sidebar-primary-foreground: oklch(0.999 0 0);
   --sidebar-accent: oklch(0.315 0.028 288.7);
   --sidebar-accent-foreground: oklch(0.999 0 0);
-  --sidebar-border: oklch(0.315 0.028 288.7);
+  --sidebar-border: oklch(0.45 0.02 288.7);
   --sidebar-ring: oklch(0.697 0.175 52.8);
 }
 
@@ -168,4 +168,17 @@
   html {
     @apply font-sans;
   }
+  ::selection {
+    background-color: var(--color-primary);
+    color: var(--color-primary-foreground);
+  }
+}
+
+.error_message {
+  color: #dc2626;
+  font-size: 0.875rem;
+}
+
+button {
+  cursor: pointer;
 }
