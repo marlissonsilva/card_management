@@ -1,5 +1,9 @@
+import { Button } from "@/components/ui/button";
 import { currencyFormat } from "../../utils/currencyFormat";
 import styles from "./Card.module.css";
+import { toastNotify } from "../../utils/toastNotify";
+import { HandCoins } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface CardMemberProps {
   data: {
@@ -19,24 +23,42 @@ export function CardMember({ data }: CardMemberProps) {
         `Olá ${name}, sua parte na fatura deste mês é de ${currencyFormat(totalAmountPurchases)}.
         O vencimento é dia ${invloceClosing + 7}. Valeu!"`,
       )
-      .then(() => console.log("Texto copiado com sucesso!"))
+      .then(() => {
+        console.log("Texto copiado com sucesso!");
+        toastNotify({
+          title: "Mensagem de cobrança gerada com sucesso",
+        });
+      })
       .catch((err) => console.error("Falha ao copiar texto: ", err));
   };
 
   return (
     <div className={styles.card}>
-      <h3 className={styles.title}>{name}</h3>
-      <div className="flex gap-10 items-center">
-        <span className={styles.amount}>
+      <div>
+        <h3 className={styles.title}>{name}</h3>
+        <span className={`${styles.amount} md:hidden`}>
           {currencyFormat(totalAmountPurchases)}
         </span>
-        <button
-          className="border px-3 py-1 rounded-sm"
-          onClick={handlePaymentReminder}
-        >
+      </div>
+      <div className="flex gap-10 items-center">
+        <span className={`${styles.amount} hidden md:flex`}>
+          {currencyFormat(totalAmountPurchases)}
+        </span>
+        <Button className="px-8" onClick={handlePaymentReminder}>
+          <HandCoins />
           Cobrar
-        </button>
+        </Button>
       </div>
     </div>
+  );
+}
+
+export function SkeletonMember() {
+  return (
+    <>
+      {[...Array(8)].map((item, i) => (
+        <Skeleton key={i} className="w-full h-14 rounded-sm" />
+      ))}
+    </>
   );
 }

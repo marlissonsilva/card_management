@@ -1,21 +1,36 @@
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+"use client";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
 import {
   authenticateSchema,
   CombinedFormData,
   userSchema,
 } from "@/src/backend/User/validate/zod";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { authenticate } from "@/src/backend/User/authenticate";
 import { createUser } from "@/src/backend/User/create";
-import { useRouter } from "next/navigation";
 import styles from "./FormUser.module.css";
-import { Loader } from "lucide-react";
 
-export function FormUser() {
+export function FormUser({ className, ...props }: React.ComponentProps<"div">) {
   const [action, setAction] = useState<"login" | "account">("login");
   const [loading, setLoading] = useState(false);
-
   const isLogin = action === "login";
   const schema = isLogin ? authenticateSchema : userSchema;
   const route = useRouter();
@@ -24,7 +39,6 @@ export function FormUser() {
     register,
     handleSubmit,
     setValue,
-    reset,
     formState: { errors },
   } = useForm<CombinedFormData>({
     resolver: zodResolver(schema),
@@ -54,98 +68,131 @@ export function FormUser() {
   };
 
   return (
-    <section className={styles.section}>
-      <div className={styles.tabs_container}>
-        <button
-          className={`${styles.tab_button} ${styles.tab_left} ${!isLogin ? styles.tab_active : ""}`}
-          onClick={() => {
-            setAction("account");
-            reset();
-          }}
-        >
-          <span className={styles.tab_text}>Criar conta</span>
-        </button>
-
-        {/* Botão Fazer Login */}
-        <button
-          className={`${styles.tab_button} ${styles.tab_right} ${isLogin ? styles.tab_active : ""}`}
-          onClick={() => {
-            setAction("login");
-            reset();
-          }}
-        >
-          <span className={styles.tab_text}>Fazer login</span>
-        </button>
-      </div>
-
-      <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-        {!isLogin && (
-          <div className={styles.input_group}>
-            <label>
-              Digite seu nome <input type="text" {...register("username")} />
-            </label>
-            {errors.username?.message && (
-              <span className={styles.error_message}>
-                {errors.username.message}
-              </span>
-            )}
-          </div>
-        )}
-
-        <div className={styles.input_group}>
-          <label>
-            Digite seu email <input type="email" {...register("email")} />
-          </label>
-          {errors.email?.message && (
-            <span className={styles.error_message}>{errors.email.message}</span>
+    <div
+      className={cn("flex flex-col gap-6 w-[90%] md:max-w-100", className)}
+      {...props}
+    >
+      <Card className="flex">
+        <CardHeader className="text-center">
+          <CardTitle className="text-xl">Bem vindo</CardTitle>
+          {!isLogin ? (
+            <CardDescription>Crie sua conta.</CardDescription>
+          ) : (
+            <CardDescription>Faça login na sua conta.</CardDescription>
           )}
-        </div>
-
-        <div className={styles.input_group}>
-          <label>
-            Digite sua senha <input type="password" {...register("password")} />
-          </label>
-          {errors.password?.message && (
-            <span className={styles.error_message}>
-              {errors.password.message}
-            </span>
-          )}
-        </div>
-
-        {!isLogin && (
-          <div className={styles.input_group}>
-            <label>
-              Data de fechamento da fatura
-              <input
-                type="number"
-                min="1"
-                max="31"
-                onChange={(event) =>
-                  setValue("invoice_closing", Number(event.target.value))
-                }
-              />
-            </label>
-            {errors.invoice_closing?.message && (
-              <span className={styles.error_message}>
-                {errors.invoice_closing.message}
-              </span>
-            )}
-          </div>
-        )}
-
-        <button
-          type="submit"
-          className={styles.submit_button}
-          disabled={loading}
-        >
-          {action === "account" ? "Criar conta" : "Fazer login"}
-        </button>
-      </form>
-      {loading && (
-        <div className="flex justify-center">
-          <Loader className="mr-3 size-5 animate-spin" />
-        </div>
-      )}
-    </section>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <FieldGroup>
+              {!isLogin && (
+                <Field>
+                  <FieldLabel htmlFor="username">Nome</FieldLabel>
+                  <Input
+                    id="username"
+                    type="text"
+                    placeholder="Fulano da Silva"
+                    {...register("username")}
+                  />
+                  {errors.username?.message && (
+                    <span className={styles.error_message}>
+                      {errors.username.message}
+                    </span>
+                  )}
+                </Field>
+              )}
+              <Field>
+                <FieldLabel htmlFor="email">Email</FieldLabel>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="fulano@example.com"
+                  {...register("email")}
+                />
+                {errors.email?.message && (
+                  <span className={styles.error_message}>
+                    {errors.email.message}
+                  </span>
+                )}
+              </Field>
+              <Field>
+                <div className="flex items-center">
+                  <FieldLabel htmlFor="password">Senha</FieldLabel>
+                  <a
+                    href="#"
+                    className="ml-auto text-sm underline-offset-4 hover:underline"
+                  >
+                    Esqueceu sua senha?
+                  </a>
+                </div>
+                <Input
+                  id="password"
+                  type="password"
+                  {...register("password")}
+                />
+                {errors.password?.message && (
+                  <span className={styles.error_message}>
+                    {errors.password.message}
+                  </span>
+                )}
+              </Field>
+              {!isLogin && (
+                <Field>
+                  <FieldLabel htmlFor="invoice_closing">
+                    Data de fechamento da fatura
+                  </FieldLabel>
+                  <Input
+                    id="invoice_closing"
+                    type="number"
+                    min="1"
+                    max="31"
+                    placeholder="20"
+                    onChange={(event) =>
+                      setValue("invoice_closing", Number(event.target.value))
+                    }
+                  />
+                  {errors.invoice_closing?.message && (
+                    <span className={styles.error_message}>
+                      {errors.invoice_closing.message}
+                    </span>
+                  )}
+                </Field>
+              )}
+              <Field>
+                <Button type="submit" disabled={loading}>
+                  Login
+                </Button>
+                <FieldDescription className="text-center">
+                  {!isLogin ? (
+                    <>
+                      Já tem uma conta?{" "}
+                      <span
+                        className="cursor-pointer underline"
+                        onClick={() => {
+                          setAction("login");
+                        }}
+                      >
+                        Faça seu login
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      Não tem uma conta?{" "}
+                      <span
+                        className="cursor-pointer underline"
+                        onClick={() => {
+                          setAction("account");
+                        }}
+                      >
+                        Inscrever-se
+                      </span>
+                    </>
+                  )}
+                </FieldDescription>
+              </Field>
+            </FieldGroup>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
   );
 }

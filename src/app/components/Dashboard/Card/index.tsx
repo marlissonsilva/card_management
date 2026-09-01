@@ -19,7 +19,7 @@ export function Card({
   const Icon = iconMap[type];
 
   return (
-    <div className="rounded-sm p-2 shadow-2xs border ">
+    <div className="rounded-sm p-2 shadow-2xs border">
       <div className="flex p-4">
         {Icon ? <Icon className="h-5 w-5 text-gray-00" /> : null}
         <h3 className="ml-2 text-sm font-medium">{title}</h3>
