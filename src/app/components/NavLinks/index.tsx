@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { links } from "@/src/app/data/navLinks";
+import { buttonVariants } from "@/components/ui/button";
 
 export default function NavLinks() {
   const pathname = usePathname();
@@ -14,8 +15,9 @@ export default function NavLinks() {
         const LinkIcon = link.icon;
         let finalHref = link.href;
         if (
-          (link.href.includes('/compras') || link.href.includes('/responsaveis'))
-          && queryString
+          (link.href.includes("/compras") ||
+            link.href.includes("/responsaveis")) &&
+          queryString
         ) {
           finalHref = `${link.href}?${queryString}`;
         }
@@ -24,11 +26,11 @@ export default function NavLinks() {
           <Link
             key={link.name}
             href={finalHref}
-            className={`flex w-full grow items-center border border-gray-200
+            className={`${buttonVariants({ variant: "outline", size: "icon" })} flex w-full items-center border border-gray-200
               gap-2 rounded-md p-3 text-md font-medium 
-              hover:text-violet-600 md:flex-none 
+              hover:text-violet-300
               justify-start md:p-2 md:px-3 cursor-pointer
-            ${pathname === link.href ? "text-violet-600 bg-sky-100" : ""}
+            ${pathname === link.href ? "text-violet-300 bg-sky-100" : ""}
             `}
           >
             <LinkIcon className="w-6" />

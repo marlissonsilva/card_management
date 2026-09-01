@@ -1,3 +1,4 @@
+import { Skeleton } from "@/components/ui/skeleton";
 import { currencyFormat } from "../../utils/currencyFormat";
 import { dateFormat } from "../../utils/dateFormat";
 import styles from "./Card.module.css";
@@ -24,11 +25,7 @@ interface CardProps {
 }
 
 export function CardPurchase({ data }: CardProps) {
-  const {
-    purchase,
-    installment_number,
-    value,
-  } = data;
+  const { purchase, installment_number, value } = data;
 
   return (
     <div className={styles.card}>
@@ -50,5 +47,15 @@ export function CardPurchase({ data }: CardProps) {
         </div>
       </div>
     </div>
+  );
+}
+
+export function SkeletonPurchase() {
+  return (
+    <>
+      {[...Array(8)].map((item, i) => (
+        <Skeleton key={i} className="w-full h-18 rounded-sm" />
+      ))}
+    </>
   );
 }

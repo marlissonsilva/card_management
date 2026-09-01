@@ -5,13 +5,33 @@ import {
   PurchaseFormData,
   purchaseSchema,
 } from "@/src/backend/Purchase/validate/zod";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { createPurchase } from "@/src/backend/Purchase/create";
-import { useForm } from "react-hook-form";
-import { Loader, XIcon } from "lucide-react";
+import { useForm, useWatch } from "react-hook-form";
 import { useModalStore } from "../../store/useModal";
 import { useState } from "react";
 import { useCreatePurchaseStore } from "../../store/useCreatePurchase";
 import { useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { CalendarIcon, Loader, XIcon } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { format } from "date-fns";
+import { toast } from "@/components/ui/toast";
+import { toastNotify } from "../../utils/toastNotify";
 
 export function FormPurchase() {
   const closeModal = useModalStore((state) => state.closeModal);
@@ -24,6 +44,7 @@ export function FormPurchase() {
     register,
     handleSubmit,
     setValue,
+    control,
     formState: { errors },
   } = useForm<PurchaseFormData>({
     resolver: zodResolver(purchaseSchema),
@@ -37,6 +58,16 @@ export function FormPurchase() {
     },
   });
 
+  const date = useWatch({
+    control,
+    name: "date_purchase",
+  });
+
+  const installmentsCount = useWatch({
+    control,
+    name: "installments_count",
+  });
+
   const onSubmit = async (formData: PurchaseFormData) => {
     setLoading(true);
     try {
@@ -48,11 +79,13 @@ export function FormPurchase() {
         installments_count: formData.installments_count,
       });
       if (response.success) {
+        route.push("/dashboard/compras");
         closeModal();
         setCreated();
-        route.refresh();
-        route.push("/dashboard/compras");
         setLoading(false);
+        toastNotify({
+          title: "Compra registrada com sucesso!",
+        });
       }
     } catch (error) {
       console.log(error);
@@ -75,117 +108,165 @@ export function FormPurchase() {
     setValue("amount", Number(value));
   };
 
-  const handleDatePurchase = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const dateString = event.target.value;
-    const date = new Date(new Date(dateString).setHours(24, 0, 0, 0));
-    setValue("date_purchase", date);
+  const handleDatePurchase = (selectedDate: Date | undefined) => {
+    if (selectedDate) {
+      setValue("date_purchase", selectedDate, {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
+    }
   };
 
   return (
     <section className={styles.section}>
-      <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex justify-between">
-          <h3 className={styles.title}>Registrar Compra</h3>
-          <button
-            className={styles.iconClose}
-            type="button"
-            onClick={closeModal}
-          >
+      <Card className={styles.container_form}>
+        <CardHeader className=" flex justify-between items-center mb-6">
+          <CardTitle className="text-3xl">Registrar Compra</CardTitle>
+          <Button className={styles.iconClose} onClick={closeModal}>
             <XIcon />
-          </button>
-        </div>
+          </Button>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <FieldGroup>
+              <Field>
+                <FieldLabel htmlFor="description">Descrição</FieldLabel>
+                <Input
+                  id="description"
+                  type="text"
+                  placeholder="Ex: Presente de aniversário"
+                  {...register("description")}
+                />
+                {errors.description?.message && (
+                  <span className={styles.error_message}>
+                    {errors.description.message}
+                  </span>
+                )}
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="amount">Valor</FieldLabel>
+                <Input
+                  id="amount"
+                  type="text"
+                  value={amount}
+                  placeholder="100,00"
+                  onChange={handleAmountChange}
+                />
+                {errors.amount?.message && (
+                  <span className={styles.error_message}>
+                    {errors.amount.message}
+                  </span>
+                )}
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="installments_count">Parcelas</FieldLabel>
+                <Select
+                  value={installmentsCount}
+                  onValueChange={(value) => {
+                    setValue("installments_count", Number(value));
+                  }}
+                  name="installments"
+                >
+                  <SelectTrigger
+                    id="installments_count"
+                    className="w-full border rounded-sm  dark:text-gray-300 flex items-center justify-between"
+                  >
+                    <SelectValue placeholder="Selecione o número de parcelas">
+                      {installmentsCount && `${installmentsCount}x`}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent className="shadow-md border rounded-sm">
+                    {[...Array(12)].map((_, i) => {
+                      const number = i + 1;
+                      return (
+                        <SelectItem key={number} value={number.toString()}>
+                          {number}x
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectContent>
+                </Select>
+                {errors.installments_count?.message && (
+                  <span className={styles.error_message}>
+                    {errors.installments_count.message}
+                  </span>
+                )}
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="date_purchase">Data da compra</FieldLabel>
+                <Popover>
+                  <PopoverTrigger
+                    className={buttonVariants({
+                      variant: "outline",
+                      size: "icon",
+                    })}
+                  >
+                    <span className="w-full flex justify-between gap-2 p-2 border  rounded-md dark:text-gray-300">
+                      {date ? (
+                        format(date, "PPP")
+                      ) : (
+                        <span className="text-gray-500">
+                          Selecione a data da compra
+                        </span>
+                      )}
+                      <CalendarIcon className="text-gray-500" size={20} />
+                    </span>
+                  </PopoverTrigger>
+                  <PopoverContent
+                    align="start"
+                    className="w-auto p-0 shadow-md border rounded-md z-999"
+                  >
+                    <Calendar
+                      mode="single"
+                      className="z-999"
+                      selected={date}
+                      onSelect={handleDatePurchase}
+                    />
+                  </PopoverContent>
+                </Popover>
+                <Input
+                  type="hidden"
+                  name="date_purchase"
+                  value={date ? format(date, "yyyy-MM-dd") + "T12:00:00" : ""}
+                />
+                {errors.date_purchase?.message && (
+                  <span className={styles.error_message}>
+                    {errors.date_purchase.message}
+                  </span>
+                )}
+              </Field>
 
-        <div className={styles.input_group}>
-          <label>
-            Descrição
-            <input type="text" {...register("description")} />
-          </label>
-          {errors.description?.message && (
-            <span className={styles.error_message}>
-              {errors.description.message}
-            </span>
-          )}
-        </div>
+              <Field>
+                <FieldLabel htmlFor="member">
+                  Responsavél pela compra
+                </FieldLabel>
+                <Input
+                  id="member"
+                  type="text"
+                  placeholder="Fulano"
+                  {...register("member")}
+                />
+                {errors.member?.message && (
+                  <span className={styles.error_message}>
+                    {errors.member.message}
+                  </span>
+                )}
+              </Field>
 
-        <div className="flex gap-3">
-          <div className={styles.input_group}>
-            <label>
-              Valor
-              <input
-                value={amount}
-                onChange={handleAmountChange}
-                placeholder="0,00"
-              />
-            </label>
-            {errors.amount?.message && (
-              <span className={styles.error_message}>
-                {errors.amount.message}
-              </span>
-            )}
-          </div>
-          <div className={styles.input_group}>
-            <label>
-              Parcelas
-              <select
-                name="installments_count"
-                id="installments_count"
-                onChange={(event) =>
-                  setValue("installments_count", Number(event.target.value))
-                }
-                defaultValue={1}
-              >
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((opt) => (
-                  <option key={opt} value={opt}>
-                    {opt}
-                  </option>
-                ))}
-              </select>
-            </label>
-            {errors.installments_count?.message && (
-              <span className={styles.error_message}>
-                {errors.installments_count.message}
-              </span>
-            )}
-          </div>
-        </div>
-
-        <div className={styles.input_group}>
-          <label htmlFor="date_purchase">
-            Data da compra
-            <input
-              type="date"
-              id="date_purchase"
-              onChange={handleDatePurchase}
-            />
-          </label>
-          {errors.date_purchase?.message && (
-            <span className={styles.error_message}>
-              {errors.date_purchase.message}
-            </span>
-          )}
-        </div>
-
-        <div className={styles.input_group}>
-          <label>
-            Responsavél pela compra
-            <input type="text" {...register("member")} />
-          </label>
-          {errors.member?.message && (
-            <span className={styles.error_message}>
-              {errors.member.message}
-            </span>
-          )}
-        </div>
-
-        <button
-          type="submit"
-          className={styles.submit_button}
-          disabled={loading}
-        >
-          {loading && <Loader className="animate-spin" />}
-          Salvar Registro
-        </button>
-      </form>
+              <Field>
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="flex items-center"
+                >
+                  {loading && <Loader className="animate-spin" />}
+                  Salvar Registro
+                </Button>
+              </Field>
+            </FieldGroup>
+          </form>
+        </CardContent>
+      </Card>
     </section>
   );
 }
