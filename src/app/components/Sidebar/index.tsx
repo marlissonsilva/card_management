@@ -8,6 +8,7 @@ import {
 import NavLinks from "../NavLinks";
 import { Logo } from "../Logo";
 import { Logout } from "../Logout";
+import { Suspense } from "react";
 
 export function Sidebar() {
   return (
@@ -16,7 +17,9 @@ export function Sidebar() {
         <Logo />
       </SidebarHeader>
       <SidebarContent className="p-4 md:p-0">
-        <NavLinks />
+        <Suspense>
+          <NavLinks />
+        </Suspense>
         <SidebarGroup />
         <SidebarGroup />
       </SidebarContent>
