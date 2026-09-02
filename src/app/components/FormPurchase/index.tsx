@@ -79,13 +79,16 @@ export function FormPurchase() {
         installments_count: formData.installments_count,
       });
       if (response.success) {
-        route.push("/dashboard/compras");
-        closeModal();
-        setCreated();
-        setLoading(false);
         toastNotify({
           title: "Compra registrada com sucesso!",
         });
+        route.push("/dashboard/compras");
+        route.refresh();
+        setTimeout(() => {
+          closeModal();
+          setCreated();
+          setLoading(false);
+        }, 100);
       }
     } catch (error) {
       console.log(error);
