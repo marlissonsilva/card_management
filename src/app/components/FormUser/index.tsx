@@ -92,6 +92,7 @@ export function FormUser({ className, ...props }: React.ComponentProps<"div">) {
                     type="text"
                     placeholder="Fulano da Silva"
                     {...register("username")}
+                    className="rounded-sm"
                   />
                   {errors.username?.message && (
                     <span className={styles.error_message}>
@@ -107,6 +108,7 @@ export function FormUser({ className, ...props }: React.ComponentProps<"div">) {
                   type="email"
                   placeholder="fulano@example.com"
                   {...register("email")}
+                  className="rounded-sm"
                 />
                 {errors.email?.message && (
                   <span className={styles.error_message}>
@@ -128,6 +130,7 @@ export function FormUser({ className, ...props }: React.ComponentProps<"div">) {
                   id="password"
                   type="password"
                   {...register("password")}
+                  className="rounded-sm"
                 />
                 {errors.password?.message && (
                   <span className={styles.error_message}>
@@ -149,6 +152,7 @@ export function FormUser({ className, ...props }: React.ComponentProps<"div">) {
                     onChange={(event) =>
                       setValue("invoice_closing", Number(event.target.value))
                     }
+                    className="rounded-sm"
                   />
                   {errors.invoice_closing?.message && (
                     <span className={styles.error_message}>
@@ -158,8 +162,8 @@ export function FormUser({ className, ...props }: React.ComponentProps<"div">) {
                 </Field>
               )}
               <Field>
-                <Button type="submit" disabled={loading}>
-                  Login
+                <Button type="submit" disabled={loading} className="rounded-sm">
+                  {isLogin ? "Login" : "Criar conta"}
                 </Button>
                 <FieldDescription className="text-center">
                   {!isLogin ? (

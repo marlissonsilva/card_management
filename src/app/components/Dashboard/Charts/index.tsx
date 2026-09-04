@@ -29,17 +29,19 @@ const chartData = [
 
 const chartConfig = {
   desktop: {
-    label: "Desktop",
+    label: "Mobile",
     color: "var(--chart-1)",
   },
 } satisfies ChartConfig;
 
 export function Chart() {
   return (
-    <Card className="max-w-125">
+    <Card className="md:max-w-[50%]">
       <CardHeader>
-        <CardTitle>Bar Chart</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>Gráfico da fatura por mês</CardTitle>
+        <CardDescription>
+          {new Date().getMonth()} - {new Date().getFullYear()}
+        </CardDescription>
       </CardHeader>
       <CardContent className="bg-green">
         <ChartContainer config={chartConfig}>

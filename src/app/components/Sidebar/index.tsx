@@ -12,11 +12,11 @@ import { Suspense } from "react";
 
 export function Sidebar() {
   return (
-    <SidebarUi className="p-2">
+    <SidebarUi className="">
       <SidebarHeader>
         <Logo />
       </SidebarHeader>
-      <SidebarContent className="p-4 md:p-0">
+      <SidebarContent className="p-4 md:p-2">
         <Suspense>
           <NavLinks />
         </Suspense>

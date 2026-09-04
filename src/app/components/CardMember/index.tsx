@@ -1,9 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { currencyFormat } from "../../utils/currencyFormat";
-import styles from "./Card.module.css";
 import { toastNotify } from "../../utils/toastNotify";
-import { HandCoins } from "lucide-react";
+import { HandCoins, Plus } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemTitle,
+} from "@/components/ui/item";
 
 interface CardMemberProps {
   data: {
@@ -32,32 +38,59 @@ export function CardMember({ data }: CardMemberProps) {
       .catch((err) => console.error("Falha ao copiar texto: ", err));
   };
 
+  const handleNumberPhone = () => {
+    // TODO: Implementar adição de numero de telefone para automatizar a mensagem de cobrança
+  };
+
   return (
-    <div className={styles.card}>
-      <div>
-        <h3 className={styles.title}>{name}</h3>
-        <span className={`${styles.amount} md:hidden`}>
-          {currencyFormat(totalAmountPurchases)}
-        </span>
+    <Item variant={"outline"} className="w-full justify-between">
+      <ItemContent>
+        <div className="flex justify-between">
+          <ItemTitle className="text-base">{name}</ItemTitle>
+          <ItemDescription className="text-base font-medium xl:hidden">
+            {currencyFormat(totalAmountPurchases)}
+          </ItemDescription>
+        </div>
+        {/* MOBILE */}
+        <ItemContent className="xl:hidden">
+          <ItemDescription className="text-base font-medium hidden xl:flex">
+            {currencyFormat(totalAmountPurchases)}
+          </ItemDescription>
+        </ItemContent>
+      </ItemContent>
+      <div className="flex w-full gap-10 items-center xl:w-auto">
+        {/* DESKTOP */}
+        <ItemContent className="hidden xl:flex">
+          <ItemDescription className="text-base font-medium hidden xl:flex">
+            {currencyFormat(totalAmountPurchases)}
+          </ItemDescription>
+        </ItemContent>
+        <ItemActions className="flex justify-between w-full">
+          <Button
+            variant={"secondary"}
+            className="xl:px-8"
+            onClick={handleNumberPhone}
+            disabled
+            title="Em brece opção de cadastrar numero de telefone"
+          >
+            <Plus />
+            WhatsApp
+          </Button>
+          <Button className="xl:px-8" onClick={handlePaymentReminder}>
+            <HandCoins />
+            Cobrar
+          </Button>
+        </ItemActions>
       </div>
-      <div className="flex gap-10 items-center">
-        <span className={`${styles.amount} hidden md:flex`}>
-          {currencyFormat(totalAmountPurchases)}
-        </span>
-        <Button className="px-8" onClick={handlePaymentReminder}>
-          <HandCoins />
-          Cobrar
-        </Button>
-      </div>
-    </div>
+    </Item>
   );
 }
 
 export function SkeletonMember() {
   return (
     <>
-      {[...Array(8)].map((item, i) => (
-        <Skeleton key={i} className="w-full h-14 rounded-sm" />
+      {[...Array(10)].map((_, i) => (
+        <Skeleton key={i} className="w-full min-h-16 rounded-sm" />
       ))}
     </>
   );

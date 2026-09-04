@@ -1,7 +1,12 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { currencyFormat } from "../../utils/currencyFormat";
 import { dateFormat } from "../../utils/dateFormat";
-import styles from "./Card.module.css";
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemTitle,
+} from "@/components/ui/item";
 
 type DataType = {
   purchase_uuid: string;
@@ -28,33 +33,40 @@ export function CardPurchase({ data }: CardProps) {
   const { purchase, installment_number, value } = data;
 
   return (
-    <div className={styles.card}>
-      <div>
-        <h3 className={styles.title}>{purchase.description}</h3>
-        <div className={styles.wrapper_left}>
-          <span className={styles.member}>{purchase.member.name}</span>
-          <span className={styles.date}>
-            Comprado em: {dateFormat(purchase.date_purchase)}
-          </span>
+    <Item variant={"outline"}>
+      <ItemContent>
+        <div className="flex justify-between">
+          <div className="flex flex-col">
+            <ItemTitle className="text-base uppercase">
+              {purchase.description}
+            </ItemTitle>
+            <ItemDescription className="text-base">
+              {purchase.member.name}
+            </ItemDescription>
+            <ItemDescription className="text-base">
+              Comprado em: {dateFormat(purchase.date_purchase)}
+            </ItemDescription>
+          </div>
+
+          <div className="flex flex-col items-end">
+            <ItemTitle className="text-xl font-semibold">
+              {currencyFormat(value)}
+            </ItemTitle>
+            <ItemDescription className="text-base">
+              {installment_number}/{purchase.installments_count}
+            </ItemDescription>
+          </div>
         </div>
-      </div>
-      <div className={styles.wrapper_right}>
-        <span className={styles.amount}>{currencyFormat(value)}</span>
-        <div>
-          <span className={styles.installments}>
-            {installment_number}/{purchase.installments_count}
-          </span>
-        </div>
-      </div>
-    </div>
+      </ItemContent>
+    </Item>
   );
 }
 
 export function SkeletonPurchase() {
   return (
     <>
-      {[...Array(8)].map((item, i) => (
-        <Skeleton key={i} className="w-full h-18 rounded-sm" />
+      {[...Array(6)].map((_, i) => (
+        <Skeleton key={i} className="w-full min-h-28 rounded-sm " />
       ))}
     </>
   );

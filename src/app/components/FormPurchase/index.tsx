@@ -149,6 +149,7 @@ export function FormPurchase() {
                   type="text"
                   placeholder="Ex: Presente de aniversário"
                   {...register("description")}
+                  className="rounded-sm"
                 />
                 {errors.description?.message && (
                   <span className={styles.error_message}>
@@ -164,6 +165,7 @@ export function FormPurchase() {
                   value={amount}
                   placeholder="100,00"
                   onChange={handleAmountChange}
+                  className="rounded-sm"
                 />
                 {errors.amount?.message && (
                   <span className={styles.error_message}>
@@ -171,84 +173,88 @@ export function FormPurchase() {
                   </span>
                 )}
               </Field>
-              <Field>
-                <FieldLabel htmlFor="installments_count">Parcelas</FieldLabel>
-                <Select
-                  value={installmentsCount}
-                  onValueChange={(value) => {
-                    setValue("installments_count", Number(value));
-                  }}
-                  name="installments"
-                >
-                  <SelectTrigger
-                    id="installments_count"
-                    className="w-full border rounded-sm  dark:text-gray-300 flex items-center justify-between"
+              <div className="flex gap-3 items-center">
+                <Field className="max-w-36">
+                  <FieldLabel htmlFor="installments_count">Parcelas</FieldLabel>
+                  <Select
+                    value={installmentsCount}
+                    onValueChange={(value) => {
+                      setValue("installments_count", Number(value));
+                    }}
+                    name="installments"
                   >
-                    <SelectValue placeholder="Selecione o número de parcelas">
-                      {installmentsCount && `${installmentsCount}x`}
-                    </SelectValue>
-                  </SelectTrigger>
-                  <SelectContent className="shadow-md border rounded-sm">
-                    {[...Array(12)].map((_, i) => {
-                      const number = i + 1;
-                      return (
-                        <SelectItem key={number} value={number.toString()}>
-                          {number}x
-                        </SelectItem>
-                      );
-                    })}
-                  </SelectContent>
-                </Select>
-                {errors.installments_count?.message && (
-                  <span className={styles.error_message}>
-                    {errors.installments_count.message}
-                  </span>
-                )}
-              </Field>
-              <Field>
-                <FieldLabel htmlFor="date_purchase">Data da compra</FieldLabel>
-                <Popover open={open} onOpenChange={setOpen}>
-                  <PopoverTrigger
-                    id="date_purchase"
-                    className={buttonVariants({
-                      variant: "outline",
-                      size: "icon",
-                    })}
-                  >
-                    <span className="w-full flex justify-between gap-2 p-2 border  rounded-md dark:text-gray-300">
-                      {date ? (
-                        format(date, "dd/MM/yyyy")
-                      ) : (
-                        <span className="text-gray-500">
-                          Selecione a data da compra
-                        </span>
-                      )}
-                      <CalendarIcon className="text-gray-500" size={20} />
+                    <SelectTrigger
+                      id="installments_count"
+                      className="w-full border rounded-sm  dark:text-gray-300 flex items-center justify-between"
+                    >
+                      <SelectValue placeholder="Selecione o número de parcelas">
+                        {installmentsCount && `${installmentsCount}x`}
+                      </SelectValue>
+                    </SelectTrigger>
+                    <SelectContent className="shadow-md border rounded-sm">
+                      {[...Array(12)].map((_, i) => {
+                        const number = i + 1;
+                        return (
+                          <SelectItem key={number} value={number.toString()}>
+                            {number}x
+                          </SelectItem>
+                        );
+                      })}
+                    </SelectContent>
+                  </Select>
+                  {errors.installments_count?.message && (
+                    <span className={styles.error_message}>
+                      {errors.installments_count.message}
                     </span>
-                  </PopoverTrigger>
-                  <PopoverContent
-                    align="start"
-                    className="w-auto p-0 shadow-md border rounded-md z-999"
-                  >
-                    <Calendar
-                      mode="single"
-                      className="z-999"
-                      selected={date}
-                      onSelect={handleDatePurchase}
-                    />
-                  </PopoverContent>
-                </Popover>
-                <Input
-                  type="hidden"
-                  name="date_purchase"
-                  value={date ? format(date, "yyyy-MM-dd") + "T12:00:00" : ""}
-                />
-                {errors.date_purchase?.message && (
-                  <span className={styles.error_message}>
-                    {errors.date_purchase.message}
-                  </span>
-                )}
-              </Field>
+                  )}
+                </Field>
+                <Field>
+                  <FieldLabel htmlFor="date_purchase">
+                    Data da compra
+                  </FieldLabel>
+                  <Popover open={open} onOpenChange={setOpen}>
+                    <PopoverTrigger
+                      id="date_purchase"
+                      className={`${buttonVariants({
+                        variant: "outline",
+                        size: "icon",
+                      })} bg-transparent rounded-sm`}
+                    >
+                      <span className="w-full flex justify-between gap-2 p-2 rounded-sm dark:text-gray-300 border border-secondary">
+                        {date ? (
+                          format(date, "dd/MM/yyyy")
+                        ) : (
+                          <span className="text-gray-500">
+                            Selecione a data da compra
+                          </span>
+                        )}
+                        <CalendarIcon className="text-gray-500" size={20} />
+                      </span>
+                    </PopoverTrigger>
+                    <PopoverContent
+                      align="start"
+                      className="w-auto p-0 shadow-md border rounded-md z-999"
+                    >
+                      <Calendar
+                        mode="single"
+                        className="z-999"
+                        selected={date}
+                        onSelect={handleDatePurchase}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <Input
+                    type="hidden"
+                    name="date_purchase"
+                    value={date ? format(date, "yyyy-MM-dd") + "T12:00:00" : ""}
+                  />
+                  {errors.date_purchase?.message && (
+                    <span className={styles.error_message}>
+                      {errors.date_purchase.message}
+                    </span>
+                  )}
+                </Field>
+              </div>
               <Field>
                 <FieldLabel htmlFor="member">
                   Responsavél pela compra
@@ -276,7 +282,7 @@ export function FormPurchase() {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="flex items-center mt-3"
+                  className="flex items-center mt-3 rounded-sm"
                 >
                   {loading && <Loader className="animate-spin" />}
                   Salvar Registro
