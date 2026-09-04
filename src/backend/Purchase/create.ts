@@ -101,13 +101,13 @@ export async function createPurchase(
     const response = await prisma.purchase.create({ data });
 
     if (response.uuid) {
+      revalidatePath("/dashboard/compras");
       return {
         success: true,
         message: "Compra e parcelas registradas com sucesso",
       };
     }
 
-    revalidatePath("/dashboard/compras");
     return { success: false, message: "Erro ao registrar compra" };
   } catch (error) {
     console.error(error);

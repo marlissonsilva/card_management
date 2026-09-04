@@ -8,7 +8,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { createPurchase } from "@/src/backend/Purchase/create";
-import { useForm, useWatch } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { useModalStore } from "../../store/useModal";
 import { useState } from "react";
 import { useCreatePurchaseStore } from "../../store/useCreatePurchase";
@@ -30,15 +30,18 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
-import { toast } from "@/components/ui/toast";
 import { toastNotify } from "../../utils/toastNotify";
+import { useMembers } from "../../hooks/useMembers";
+import { MemberCombobox } from "./MemberCombobox";
 
 export function FormPurchase() {
   const closeModal = useModalStore((state) => state.closeModal);
   const setCreated = useCreatePurchaseStore((state) => state.setCreated);
   const [amount, setAmount] = useState("");
   const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
   const route = useRouter();
+  const { data, loading: loadingMembers } = useMembers();
 
   const {
     register,
@@ -79,16 +82,23 @@ export function FormPurchase() {
         installments_count: formData.installments_count,
       });
       if (response.success) {
-        route.push("/dashboard/compras");
-        closeModal();
-        setCreated();
-        setLoading(false);
         toastNotify({
           title: "Compra registrada com sucesso!",
         });
+        route.push("/dashboard/compras");
+        route.refresh();
+        setTimeout(() => {
+          closeModal();
+          setCreated();
+          setLoading(false);
+        }, 100);
       }
     } catch (error) {
       console.log(error);
+      toastNotify({
+        title: `Erro ao registrar compra ${error}`,
+        type: "error",
+      });
     }
   };
 
@@ -114,12 +124,15 @@ export function FormPurchase() {
         shouldValidate: true,
         shouldDirty: true,
       });
+      setOpen(false);
     }
   };
 
+  const members = data.map((m) => m.name);
+
   return (
     <section className={styles.section}>
-      <Card className={styles.container_form}>
+      <Card className={`${styles.container_form} md:p-8`}>
         <CardHeader className=" flex justify-between items-center mb-6">
           <CardTitle className="text-3xl">Registrar Compra</CardTitle>
           <Button className={styles.iconClose} onClick={closeModal}>
@@ -194,8 +207,9 @@ export function FormPurchase() {
               </Field>
               <Field>
                 <FieldLabel htmlFor="date_purchase">Data da compra</FieldLabel>
-                <Popover>
+                <Popover open={open} onOpenChange={setOpen}>
                   <PopoverTrigger
+                    id="date_purchase"
                     className={buttonVariants({
                       variant: "outline",
                       size: "icon",
@@ -203,7 +217,7 @@ export function FormPurchase() {
                   >
                     <span className="w-full flex justify-between gap-2 p-2 border  rounded-md dark:text-gray-300">
                       {date ? (
-                        format(date, "PPP")
+                        format(date, "dd/MM/yyyy")
                       ) : (
                         <span className="text-gray-500">
                           Selecione a data da compra
@@ -235,16 +249,21 @@ export function FormPurchase() {
                   </span>
                 )}
               </Field>
-
               <Field>
                 <FieldLabel htmlFor="member">
                   Responsavél pela compra
                 </FieldLabel>
-                <Input
-                  id="member"
-                  type="text"
-                  placeholder="Fulano"
-                  {...register("member")}
+                <Controller
+                  name="member"
+                  control={control}
+                  render={({ field }) => (
+                    <MemberCombobox
+                      data={members}
+                      value={field.value}
+                      onChange={field.onChange}
+                      loading={loadingMembers}
+                    />
+                  )}
                 />
                 {errors.member?.message && (
                   <span className={styles.error_message}>
@@ -257,7 +276,7 @@ export function FormPurchase() {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="flex items-center"
+                  className="flex items-center mt-3"
                 >
                   {loading && <Loader className="animate-spin" />}
                   Salvar Registro
