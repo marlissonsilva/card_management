@@ -4,13 +4,13 @@ import { Suspense } from "react";
 
 export default async function Page() {
   return (
-    <section>
+    <section className="flex flex-col gap-4">
       <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4 ">
         <Suspense>
           <CardWrapper />
         </Suspense>
-        <Chart />
       </div>
+      <Chart />
       <div className="w-full h-full bg-orange-300 "></div>
     </section>
   );
