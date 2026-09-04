@@ -8,12 +8,12 @@ export const purchaseSchema = z.object({
   member: z
     .string()
     .min(1, { message: "Digite ou selecione o responsável pela compra" }),
-  date_purchase: z
-    .date()
-    .min(1, { message: "Informe a data que a compra foi efetuada" }),
+  date_purchase: z.date({
+    error: "Informe a data que a compra foi efetuada",
+  }),
   installments_count: z.number({ message: "Informe o número de parcelas" }),
   status: z.enum(["OPEN", "CLOSE"]).optional(),
-  user_uuid: z.string().optional()
+  user_uuid: z.string().optional(),
 });
 
 export type PurchaseFormData = z.infer<typeof purchaseSchema>;

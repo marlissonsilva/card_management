@@ -24,6 +24,7 @@ cada comprador efetuar o pagamento da sua parte na fatura.
 - Soma(por responsável da compra)
 - Relatório
 - Cobrança
+- Opção de cadastrar o número do responsavel/membro para poder facilitar o envio da mensagem de cobrança
 
 ### Detalhamento das funcionalidades
 
