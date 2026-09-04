@@ -9,7 +9,7 @@ export default function Page() {
   const { data, loading } = useInstallments();
 
   return (
-    <section className="flex flex-col gap-2 h-[80vh] overflow-auto">
+    <section className="flex flex-col gap-2 h-[80vh] pr-2 overflow-auto">
       {loading && <SkeletonPurchase />}
       {data.map((item) => (
         <CardPurchase key={item.uuid} data={item} />

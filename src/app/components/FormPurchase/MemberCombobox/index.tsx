@@ -53,6 +53,7 @@ export function MemberCombobox({
       <ComboboxInput
         placeholder="Ex: Fulano da Silva"
         onChange={(e) => setInputValue(e.target.value)}
+        className="rounded-sm"
       />
       <ComboboxContent>
         {loading ? (
@@ -76,9 +77,9 @@ export function MemberCombobox({
         )}
 
         {!loading && (
-          <ComboboxList>
+          <ComboboxList className="rounded-sm">
             {(item) => (
-              <ComboboxItem key={item} value={item}>
+              <ComboboxItem key={item} value={item} className="text-md">
                 {item}
               </ComboboxItem>
             )}
