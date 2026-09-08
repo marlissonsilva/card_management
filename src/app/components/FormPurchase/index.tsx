@@ -225,7 +225,7 @@ export function FormPurchase() {
                           format(date, "dd/MM/yyyy")
                         ) : (
                           <span className="text-gray-500">
-                            Selecione a data da compra
+                            Selecione uma data
                           </span>
                         )}
                         <CalendarIcon className="text-gray-500" size={20} />
