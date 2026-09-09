@@ -3,6 +3,7 @@ import {
   CardPurchase,
   SkeletonPurchase,
 } from "@/src/app/components/CardPurchase";
+import { NoData } from "@/src/app/components/NoData";
 import { useInstallments } from "@/src/app/hooks/useInstallments";
 
 export default function Page() {
@@ -15,7 +16,7 @@ export default function Page() {
         <CardPurchase key={item.uuid} data={item} />
       ))}
       {!loading && data.length === 0 && (
-        <div className="text-center pt-20">Sem compras cadastradas!</div>
+        <NoData message="Sem compras cadastradas!" />
       )}
     </section>
   );

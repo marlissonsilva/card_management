@@ -1,12 +1,16 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { logout } from "@/src/backend/User/logout";
-import { LogOut } from "lucide-react";
+import { Loader, LogOut } from "lucide-react";
+import { useState } from "react";
 
 export function Logout() {
+  const [loading, setLoading] = useState(false);
   const handleLogout = async (e: React.FormEvent<HTMLFormElement>) => {
+    setLoading(true);
     e.preventDefault();
     await logout();
+    setLoading(false);
   };
 
   return (
@@ -18,6 +22,11 @@ export function Logout() {
         <LogOut className="w-6" />
         <span>Sair</span>
       </Button>
+      {loading && (
+        <div className="absolute top-0 left-0 h-full w-screen backdrop-blur-xs flex items-center justify-center">
+          <Loader size={100} className="animate-spin"/>
+        </div>
+      )}
     </form>
   );
 }

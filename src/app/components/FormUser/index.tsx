@@ -27,6 +27,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { authenticate } from "@/src/backend/User/authenticate";
 import { createUser } from "@/src/backend/User/create";
 import styles from "./FormUser.module.css";
+import { Loader } from "lucide-react";
+import { toastNotify } from "../../utils/toastNotify";
 
 export function FormUser({ className, ...props }: React.ComponentProps<"div">) {
   const [action, setAction] = useState<"login" | "account">("login");
@@ -52,6 +54,13 @@ export function FormUser({ className, ...props }: React.ComponentProps<"div">) {
       });
       if (response.success) {
         route.push("/dashboard");
+      } else {
+        toastNotify({
+          title:
+            "Erro ao fazer login, verifique seu email e senha e tente novamente",
+          type: "error",
+        });
+        setLoading(false);
       }
     } else {
       const response = await createUser({
@@ -162,7 +171,12 @@ export function FormUser({ className, ...props }: React.ComponentProps<"div">) {
                 </Field>
               )}
               <Field>
-                <Button type="submit" disabled={loading} className="rounded-sm">
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="flex items-center rounded-sm"
+                >
+                  {loading && <Loader className="animate-spin" />}
                   {isLogin ? "Login" : "Criar conta"}
                 </Button>
                 <FieldDescription className="text-center">

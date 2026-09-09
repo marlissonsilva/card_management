@@ -31,7 +31,7 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { toastNotify } from "../../utils/toastNotify";
-import { useMembers } from "../../hooks/useMembers";
+import { useAllMembers } from "../../hooks/useMembers";
 import { MemberCombobox } from "./MemberCombobox";
 
 export function FormPurchase() {
@@ -41,7 +41,7 @@ export function FormPurchase() {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const route = useRouter();
-  const { data, loading: loadingMembers } = useMembers();
+  const { data, loading: loadingMembers } = useAllMembers();
 
   const {
     register,
@@ -225,7 +225,7 @@ export function FormPurchase() {
                           format(date, "dd/MM/yyyy")
                         ) : (
                           <span className="text-gray-500">
-                            Selecione a data da compra
+                            Selecione uma data
                           </span>
                         )}
                         <CalendarIcon className="text-gray-500" size={20} />
