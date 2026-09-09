@@ -28,6 +28,7 @@ import { authenticate } from "@/src/backend/User/authenticate";
 import { createUser } from "@/src/backend/User/create";
 import styles from "./FormUser.module.css";
 import { Loader } from "lucide-react";
+import { toastNotify } from "../../utils/toastNotify";
 
 export function FormUser({ className, ...props }: React.ComponentProps<"div">) {
   const [action, setAction] = useState<"login" | "account">("login");
@@ -53,6 +54,13 @@ export function FormUser({ className, ...props }: React.ComponentProps<"div">) {
       });
       if (response.success) {
         route.push("/dashboard");
+      } else {
+        toastNotify({
+          title:
+            "Erro ao fazer login, verifique seu email e senha e tente novamente",
+          type: "error",
+        });
+        setLoading(false);
       }
     } else {
       const response = await createUser({
